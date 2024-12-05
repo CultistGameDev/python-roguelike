@@ -11,8 +11,7 @@ def main():
     running = True
     clock = pygame.Clock()
 
-    b = BSP(500, 500)
-    b.split(3)
+    b = BSP(3)
 
     while running:
         for event in pygame.event.get():

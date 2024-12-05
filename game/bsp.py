@@ -3,7 +3,17 @@ import pygame
 
 
 class Node:
+    """
+    A Binary Tree Node for the BSP class.
+    """
+
     def __init__(self, *, root: bool = False):
+        """
+        Create a node which is denoted as the root node if `root` is True
+
+        Args:
+            root (bool, optional): Whether the node being created is the root. Defaults to False.
+        """
         self.split: float = 0.0
         self.root: bool = root
         self.horziontal: bool = True
@@ -12,13 +22,31 @@ class Node:
 
 
 class BSP:
-    def __init__(self, width: int, height: int) -> None:
-        self.width: int = width
-        self.height: int = height
+    """
+    Class that allows for the creation of a map using a Binary Space Partition Tree.
+    """
+
+    def __init__(
+        self, recur: int, /, max_split: float = 0.7, min_split: float = 0.3
+    ) -> None:
+        """
+        Creates the BSP class.
+        """
         self.root = Node(root=True)
         self.rand = random.Random()
+        self.max_split = max_split
+        self.min_split = min_split
+        self._split(self.root, recur, bool(self.rand.getrandbits(1)))
 
     def draw(self, surf: pygame.Surface, width: int, height: int) -> None:
+        """
+        Draws the current BSP onto the pygame surface `surf`.
+
+        Args:
+            surf (pygame.Surface): The surface to draw to.
+            width (int): Width of `surf`
+            height (int): Height of `surf`
+        """
         self._draw(surf, width, height, (0, 0), self.root)
 
     def _draw(
@@ -54,13 +82,12 @@ class BSP:
                     node.right,
                 )
 
-    def split(self, recur: int) -> None:
-        self._split(self.root, recur)
-
-    def _split(self, node: Node, recur: int, horizontal: bool = False) -> None:
+    def _split(self, node: Node, recur: int, horizontal: bool) -> None:
         if recur >= 0:
             node.horziontal = horizontal
-            node.split = self.rand.random() * (0.7 - 0.3) + 0.3
+            node.split = (
+                self.rand.random() * (self.max_split - self.min_split) + self.min_split
+            )
             node.left = Node()
             node.right = Node()
             self._split(node.left, recur - 1, not horizontal)
