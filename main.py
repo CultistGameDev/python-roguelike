@@ -1,6 +1,6 @@
 import pygame
 
-from game.bsp import BSP
+from game import BSP
 
 
 def main():
